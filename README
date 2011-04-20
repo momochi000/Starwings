@@ -1,0 +1,15 @@
+Starwings (Working Title)
+A prototype for a ship to ship space combat game
+Last-modified: 13 Apr 2011 04:33:00 PM
+
+Created by
+=====
+  Zachery Chin
+  Chris Victoria
+
+
+LEFT OFF
+=======
+-Just completed splitting the project into discrete files.
+Continuing breaking up the original game file into their respective files
+being sure to fit everything into the sw_game object
