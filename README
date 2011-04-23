@@ -1,15 +1,39 @@
-Starwings (Working Title)
-A prototype for a ship to ship space combat game
-Last-modified: 13 Apr 2011 04:33:00 PM
+Starwings (working title)
+Last-modified: 22 Apr 2011 06:50:56 PM
 
 Created by
-=====
+==========
   Zachery Chin
   Chris Victoria
 
+Description
+==========
+2D top down space flight/battle game in javascript for HTML5 canvas using
+the Crafty js game engine.
 
-LEFT OFF
-=======
--Just completed splitting the project into discrete files.
-Continuing breaking up the original game file into their respective files
-being sure to fit everything into the sw_game object
+Questions
+==========
+What is the scale of the game? I'm not talking about the scope but what is the 
+relationship between one pixel on the screen and game dimensions in kilometers
+and so forth? I'm sure most games don't worry about this unless they're complex
+simulations but in order to get the right feel I do want some simple physics
+to apply to the objects in space.  With that we have to think of formulae.
+With that we must think of units.  With units we must think of scale. Am I
+overthinking things? maybe...
+
+TODO/LEFT OFF
+version: 0.2
+==========
+- Thinking about adding unit tests for vector and physics classes
+- Previously, player ship data and controls were stored in a special player
+  component.  In the process of generalizing this to it's own ship component
+  and keeping player specific information in the player component.
+- Abstract out the ship inputs into a single vector (helm vector)
+- Create the controller which takes input vector and determines how to
+  apply engine thrust (Ship component) 
+- Be sure all component declarations/definitions are capitalized. Crafty 0.4
+  changed this.
+
+Changelog
+==========
+

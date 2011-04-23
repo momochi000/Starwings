@@ -1,0 +1,12 @@
+Starwings (working title) design doc
+Zachery Chin
+copyright 2011 Obese Ostrich Software LLC
+
+Intro
+=====
+2D top down spaceflight and combat engine.  Eventually this may expand in
+scope to trading/empire building but the flight must be fun and crisp
+first.
+
+Mechanics
+=====

@@ -1,5 +1,5 @@
 /* Miscellaneous utility functions and classes for starwings game
- * Last-modified: 19 Apr 2011 07:39:13 PM
+ * Last-modified: 22 Apr 2011 06:28:50 PM
  * Written by: zachery chin
  *
  *
@@ -37,7 +37,7 @@ function keys(obj){
 }
 function zDebug(msg){
   var thisfile = document.location.pathname;
-  console.log("debugging the debug function, what file does it return?==>" + thisfile);
+  console.log("debugging the debug function, what file does it return? ==>" + thisfile);
   var newmsg = "DEBUG:"+thisfile;
   console.log('blah');
 }
@@ -61,6 +61,15 @@ sw_game.Vector = function (x, y){
     this.y+=other_v.y;
     return this;
   };
+  //Add a scalar value to a vector. Alters it's magnitude but the direction of
+  //the vector remains unchanged
+  this.add_scalar = function (scalar){
+    var theta = Math.atan(this.x/this.y);
+    var new_vx = scalar * Math.cos(theta);
+    var new_vy = scalar * Math.sin(theta);
+    var new_v = new Vector(new_vx, new_vy);
+    this.add(new_v);
+  };
   this.divide = function (other_v) {
     //TODO: implement this
   };
@@ -76,11 +85,12 @@ sw_game.Vector = function (x, y){
   this.magnitude = function (){
     return Math.sqrt(this.x*this.x + this.y*this.y);
   };
-  this.mag = function (){
-    return this.magnitude();//alias for magnitude
-  }
+  this.mag = function (){ return this.magnitude(); }//alias for magnitude
   this.multiply = function (other_v){
   };
+  this.plus = function (other_v){ //like add but doesn't change value
+    return new Vector(this.x+other_v.x, this.y+other_v.y)
+  }
   this.subtract = function (other_v){
     this.x-=other_v.x;
     this.y-=other_v.y;
@@ -88,9 +98,15 @@ sw_game.Vector = function (x, y){
   };
   this.sub = function () { return subtract(); };//alias for subtract
   this.size = function (){ return magnitude(); };//alias for magnitude
+  this.zero = function (){ this.x = 0; this.y = 0; };
   var that=this;
 }
 //class methods
+/* class method to add two vectors.  Returns a vector that is the sum of
+ * both without modifying either*/
+sw_game.Vector.add = function (v1, v2) {
+  return v1.plus(v2);
+}
 /* class method to calculate the direction of a vector based on cartesian 
  * coordinates x and y*/
 sw_game.Vector.direction = function (x, y) {
