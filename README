@@ -1,5 +1,5 @@
 Starwings (working title)
-Last-modified: 22 Apr 2011 06:50:56 PM
+Last-modified: 24 Apr 2011 01:33:08 PM
 
 Created by
 ==========
@@ -11,6 +11,22 @@ Description
 2D top down space flight/battle game in javascript for HTML5 canvas using
 the Crafty js game engine.
 
+LEFT OFF
+==========
+Just tested that applying force does work.  Now need to create a function/
+system which converts from game units to screen units.
+Build the engine component or object which attaches to the ship
+Build the inertial dampener system
+Flesh out the helm controller to apply thrust properly
+
+
+Code Quirks
+==========
+Crafty uses _var as a convention to denote private variables for components.
+I've read that this isn't a good practice and have avoided using it in my
+own classes.  However, as I don't know enough to extend crafty components
+yet I'll stick with their conventions for now.
+
 Questions
 ==========
 What is the scale of the game? I'm not talking about the scope but what is the 
@@ -21,19 +37,22 @@ to apply to the objects in space.  With that we have to think of formulae.
 With that we must think of units.  With units we must think of scale. Am I
 overthinking things? maybe...
 
-TODO/LEFT OFF
-version: 0.2
+Currently working on/TODO
+ver - 0.2
 ==========
 - Thinking about adding unit tests for vector and physics classes
+- Create the controller which takes input vector and determines how to
+  apply engine thrust (Ship component) 
+
+Changelog
+==========
+ver - 0.2
+- Upgrade to Crafty 0.4
 - Previously, player ship data and controls were stored in a special player
   component.  In the process of generalizing this to it's own ship component
   and keeping player specific information in the player component.
 - Abstract out the ship inputs into a single vector (helm vector)
-- Create the controller which takes input vector and determines how to
-  apply engine thrust (Ship component) 
 - Be sure all component declarations/definitions are capitalized. Crafty 0.4
   changed this.
 
-Changelog
-==========
 

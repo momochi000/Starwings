@@ -1,29 +1,27 @@
 /*   SHIP definitions. 
- *   Last-modified: 19 Apr 2011 07:32:34 PM
+ *   Last-modified: 24 Apr 2011 01:28:39 PM
  *   Here we'll declare stats (attributes) for various ship types that we can
  *   refer to elsewhere, thus keeping things nice and neat.
  *   We should also include the sprite used for this.
  * */
-//console.log("DEBUG:SHIP ARE WE GETTING HREE???");
-//console.log("DEBUG: SHIP: BEFORE CHECKING FOR THE GAME OBJECT=>"+sw_game);
 
 
 if(typeof(sw_game) === 'undefined'){var sw_game={}; }
-sw_game.ship={};
+sw_game.Ship={};
 
-sw_game.ship.PL_SPEED_TO_ANIM_FRAME = [
+sw_game.Ship.PL_SPEED_TO_ANIM_FRAME = [
   ['fly_left', 'fly_left_slow', 'fly_left_fast'],
   ['fly_neutral', 'fly_neutral_slow', 'fly_neutral_fast'],
   ['fly_right', 'fly_right_slow', 'fly_right_fast']
 ];
 
-sw_game.ship.SHIPS = {
+sw_game.Ship.SHIPS = {
   'standard': {
     'inertial_damper': [0.195, 0.245],
     'mass': 4000,
-    'max_speed': [4,6],
-    'max_accel': [1,1],
-    'max_thrust': [0.28,0.32],
+    'max_speed': 400,
+    'max_accel': 50,
+    'max_thrust': 80,
     'max_yaw': 8, //in degrees/sec
     'dim_h': 32, //in pixels
     'dim_w': 32, //in pixels
@@ -43,16 +41,34 @@ sw_game.ship.SHIPS = {
  * direction of the input. It is meant to be attached to the ship controls
  * This belongs in the ship itself i believe..
  */
-sw_game.ship.inputController = function (inputVector){
+sw_game.Ship.inputController = function (inputVector){
   //engage broadside thruster
   //engage main impulse drive
   //engage yaw thrusters
 }
 
 // Depends on physics component
-Crafty.c('Ship', {
-  Ship: function (){
-    helmControl: new sw_game.Vector(0,0);
+Crafty.c('SWShip', {
+  _helmControl: new sw_game.Vector(0,0),
+  _maxYaw: 0,
+  _maxVel: 0,
+  _maxAccel: 0,
+  _maxThrust: 0,
+  _idamper: 0,
+  SWShip: function (ship_type){ // Constructor
+    this._maxYaw = ship_type['max_yaw'];
+    this._maxVel = ship_type['max_speed'];
+    this._maxAccel = ship_type['max_accel'];
+    this._maxThrust = ship_type['max_thrust'];
+    this.bind('enterframe', function() {
+      if(this.__move.up){// lets apply a test force to the ship
+        //this._force.x = 5;
+        //this._force.y = 5;
+        //console.log('ARE WE GETTING HRE????');
+      }
+      //handle the engine output based on input from helm control
+    });
+    return this;
   }
 });
 

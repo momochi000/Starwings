@@ -1,5 +1,5 @@
 /* Miscellaneous utility functions and classes for starwings game
- * Last-modified: 22 Apr 2011 06:28:50 PM
+ * Last-modified: 23 Apr 2011 12:53:53 PM
  * Written by: zachery chin
  *
  *
@@ -82,6 +82,10 @@ sw_game.Vector = function (x, y){
   this.heading = function (){
     return direction(this.x, this.y);
   };
+  this.isZero = function(){ //return true if the vector is 0,0 or close enough to it
+    if(this.x == 0 && this.y == 0) return true;
+    return false;
+  };
   this.magnitude = function (){
     return Math.sqrt(this.x*this.x + this.y*this.y);
   };
@@ -128,6 +132,8 @@ sw_game.Vector.direction = function (x, y) {
     return Math.atan(y/x)+PI;
   }
 }
+// class constants.  This should probably be at the top
+sw_game.Vector.VECTOR_ZERO_THRESHOLD = 0.003;
 // END VECTOR CLASS ============================
 
 

@@ -1,6 +1,6 @@
 /*
  Written by: Zachery Chin
- Last-modified: 19 Apr 2011 07:33:00 PM
+ Last-modified: 24 Apr 2011 01:19:37 PM
 
 
  Shooter game: 
@@ -8,37 +8,36 @@
  Very simple, just to test the capabilities and become
  familiar with Crafty
 
-
- TODO: 
-   - Seems to be a problem animating the bullet.  I believe it may be
-   that I can't use two different sprite files, let's try merging
-   all the assets into a single image.
-
-   - Ensure bullets are destroyed if they exit the screen.
 *******************************/
+//alert('checking for crafty' + typeof(Crafty));
 
 if(typeof(sw_game)==='undefined'){ sw_game = {};};
 
 /*CONSTANTS*/
+sw_game.FRAMERATE = 60; //in FPS
+sw_game.TIMESTEP = 0.0166667; // 1/FRAMERATE
 
 var SPR_PLAYER_SHIP = "assets/player01.png"; //Note: paths are relative to the html file which includes this
 //var SPR_BULLET01 = "bullet01_0.png"; //2 frames
 var SPR_ASSETS = "assets/shooter_assets01.png";
 var gameWidth; //global, this might need to move
 var gameHeight;
+
 /*******************END CONSTANTS***************/
 
 window.onload=function(){
  //Perhaps I should init the canvas size in accordance with the 
  //current window size.
-  gameHeight=window.innerHeight-4;
+  gameHeight=window.innerHeight-4; //-4 for the border
   gameWidth=window.innerWidth-4;
-  Crafty.init(60, gameWidth, gameHeight); //-4 for the border
+  //Crafty.init(sw_game.FRAMERATE, gameWidth, gameHeight);
+  Crafty.init(gameWidth, gameHeight);
   Crafty.canvas();
 
+  //can we move this outside of window.onload?
   Crafty.sprite(32, SPR_ASSETS, {
-    player: [0,0],
-    shots: [0,1]
+    spr_player: [0,0],
+    spr_shots: [0,1]
   });
 
   //function generateWorld(){}; //define the stage
@@ -60,7 +59,7 @@ window.onload=function(){
   Crafty.scene("main", function(){ //define the main scene
     //console.log("DEBUG: Appearing in main function");
     //generateWorld(); //init the stage
-    var player=sw_game.player.createPlayer();
+    var player=sw_game.Player.createPlayer();
     //console.log("DEBUG: PLayer has been created");
   });
 };
