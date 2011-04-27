@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <title>Test page for Vector class</title>
+    <script language="Javascript" src="../../jsunit/app/jsUnitCore.js"></script>
+    <script language="Javascript" src= "../src/util.js"></script>
+  </head>
+  <body>
+    <script language="Javascript">
+      function setUp(){
+        var v_empty = new sw_game.Vector();
+        var v_x1 = new sw_game.Vector(5, 0);
+        var v_x2 = new sw_game.Vector(10, 0);
+        var v_y1 = new sw_game.Vector(0, 5);
+        var v_y2 = new sw_game.Vector(0, 10);
+      }
+      function tearDown(){
+        //v_empty = 0;
+        //v_x1 = 0;
+        //v_x2 = 0;
+      }
+
+      function testCreate(){
+        var newVector = new sw_game.Vector();
+        assertEquals("New vector should have x initialized to 0", newVector.x, 0);
+        assertEquals("New vector should have y initialized to 0", newVector.y, 0);
+        newVector = 0;
+        var init_value_x = 5;
+        var init_value_y = 10;
+        var newVector = new sw_game.Vector(5, 10);
+        assertEquals("New vector should have x initialized to "+init_value_x, newVector.x, init_value_x);
+        assertEquals("New vector should have y initialized to "+init_value_y, newVector.y, init_value_y);
+        newVector = 0;
+        init_value_x = 0;
+        init_value_y = 0;
+      }
+      function testAddVectors(){
+        assertEquals("Adding vectors should return a vector", typeof(v_x1.add(v_x2)), "Object" );
+        assertEquals("The sum of vectors with x values should yield a vector who's x value is their sum", 
+          (v_x1.add(v_x2)).x, v_x1.x+v_x2.x);
+        assertEquals("The sum of vectors with y values should yield a vector who's y value is their sum",
+          v_y1.add(v_y2).y, v_y1.y+v_y2.y);
+      }
+      function testAddScalar(){
+        var sum = v_x1.add_scalar(5);
+        assertEquals("Adding a scalar to vector with only x length should only increase it's x length",
+          sum.y, 0);
+        var sum = v_y1.add_scalar(5);
+        assertEquals("Adding a scalar to vector with only y length should only increase it's y length",
+          sum.x, 0);
+        assertEquals("Adding a scalar to vector should not modify it's heading", 0,0);
+        //TODO: flesh these out
+        assert("Adding a scalar to vector should change it's hypotenuse", true);
+        assert("Adding a negative scalar to vector should reduce it's hypotenuse", true);
+
+        var sum = 0; //deallocate the variable
+      }
+    </script>
+  </body>
+</html>

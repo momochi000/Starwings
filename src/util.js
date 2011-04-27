@@ -1,7 +1,11 @@
 /* Miscellaneous utility functions and classes for starwings game
- * Last-modified: 23 Apr 2011 12:53:53 PM
+ * Last-modified: 27 Apr 2011 01:27:09 PM
  * Written by: zachery chin
  *
+ * This file contains some utility functions and classes used by the game
+ * which don't seem to fit anywhere else.
+ * as of now: 
+ * Vector: representing a 2d line segment
  *
  ***********************************************************/
 //declareNamespace(sw_game);
@@ -15,9 +19,13 @@ var HALF_PI = PI*0.5;
 var ONE_AND_HALF_PI = PI*1.5;
 
 //Takes in some angle in degrees and converts to radians
+//Might be good to add this to the Math namespace
 function degreesToRadians(deg){
+  return (deg*(Math.PI/180));
 }
-
+function radiansToDegrees(rads){
+  return (rads*(180/Math.PI));
+}
 function myXOR(a, b){
   return ( a || b ) && !( a && b );
 }
@@ -49,12 +57,11 @@ function zDebug(msg){
  * a container and some utility functions to handle vectors
  */
 sw_game.Vector = function (x, y){
-  if(typeof(x)===undefined && typeof(y)===undefined){
+  if(typeof(x)==='undefined' && typeof(y)==='undefined'){
+    this.x=0; this.y=0;
   }else{
     this.x = x; this.y = y;
   }
-  if(typeof(x)===undefined){this.x = x;};
-  if(typeof(y)===undefined){this.x = x;};
 
   this.add = function (other_v){
     this.x+=other_v.x;
@@ -111,6 +118,12 @@ sw_game.Vector = function (x, y){
 sw_game.Vector.add = function (v1, v2) {
   return v1.plus(v2);
 }
+sw_game.Vector.degreesToRadians = function (degs){
+  return (degs*(Math.PI/180));
+}
+sw_game.Vector.radiansToDegrees = function (rads){
+  return (rads*(180/Math.PI));
+}
 /* class method to calculate the direction of a vector based on cartesian 
  * coordinates x and y*/
 sw_game.Vector.direction = function (x, y) {
@@ -155,7 +168,7 @@ sw_game.isOnScreen = function (testObj, gameDims){
   return true;
 }
 
-
+/*
 function testScreenBorderLeft(testObj, gameDims){
   if(testObj.x<=0) return true;
   return false;
@@ -172,5 +185,6 @@ function testScreenBorderBottom(testObj, gameDims){
   if(testObj.y+testObj.h >= gameDims.h) return true;
   return false;
 }
+*/
 
 sw_game.dependencies.included('util');

@@ -1,5 +1,5 @@
 /*   SHIP definitions. 
- *   Last-modified: 24 Apr 2011 01:28:39 PM
+ *   Last-modified: 25 Apr 2011 11:57:16 AM
  *   Here we'll declare stats (attributes) for various ship types that we can
  *   refer to elsewhere, thus keeping things nice and neat.
  *   We should also include the sprite used for this.
@@ -41,7 +41,12 @@ sw_game.Ship.SHIPS = {
  * direction of the input. It is meant to be attached to the ship controls
  * This belongs in the ship itself i believe..
  */
+
+//determines when to apply thrust.  Let's make this in radians
+var THRUST_DIR_THRESHOLD = 10; 
+
 sw_game.Ship.inputController = function (inputVector){
+  var heading = inputVector.heading();
   //engage broadside thruster
   //engage main impulse drive
   //engage yaw thrusters
@@ -60,7 +65,15 @@ Crafty.c('SWShip', {
     this._maxVel = ship_type['max_speed'];
     this._maxAccel = ship_type['max_accel'];
     this._maxThrust = ship_type['max_thrust'];
-    this.bind('enterframe', function() {
+    this.helmController = function (){
+      var heading = this._helmControl.heading();
+      if(heading){
+      }
+  //engage broadside thruster
+  //engage main impulse drive
+  //engage yaw thrusters
+    };
+    this.bind('enterframe', function () {
       if(this.__move.up){// lets apply a test force to the ship
         //this._force.x = 5;
         //this._force.y = 5;

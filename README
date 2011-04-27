@@ -1,10 +1,13 @@
 Starwings (working title)
-Last-modified: 24 Apr 2011 01:33:08 PM
+Last-modified: 27 Apr 2011 02:22:40 PM
 
 Created by
 ==========
-  Zachery Chin
-  Chris Victoria
+  Zachery Chin - Programming
+  Chris Victoria - Art
+
+Current Version
+==========
 
 Description
 ==========
@@ -13,12 +16,18 @@ the Crafty js game engine.
 
 LEFT OFF
 ==========
+Building unit tests (for vector first) but having trouble with the setUp()
+function
+Work on rotation
 Just tested that applying force does work.  Now need to create a function/
 system which converts from game units to screen units.
 Build the engine component or object which attaches to the ship
 Build the inertial dampener system
 Flesh out the helm controller to apply thrust properly
 
+In this Version
+==========
+Added unit tests (JS unit)
 
 Code Quirks
 ==========

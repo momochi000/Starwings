@@ -1,5 +1,6 @@
 /* Written by Zachery Chin
- * Last-modified: 24 Apr 2011 01:23:28 PM
+ * Last-modified: 25 Apr 2011 11:12:41 AM
+ * 
  * This file deals with the player entity and handling user input
  */
 
