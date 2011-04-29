@@ -1,0 +1,146 @@
+<html>
+  <head>
+    <title>Test page for Vector class</title>
+    <script language="Javascript" src="../../jsunit/app/jsUnitCore.js"></script>
+    <script language="Javascript" src= "../sw_app.js"></script>
+    <script language="Javascript" src= "../src/util.js"></script>
+  </head>
+  <body>
+    <script language="Javascript">
+      var v_empty;
+      var v_x1;
+      var v_x2;
+      var v_y1;
+      var v_y2;
+      var v_fortyfive;
+      var v_thirtysixty;
+      
+      function setUp(){
+        v_empty = new sw_game.Vector();
+        v_x1 = new sw_game.Vector(5, 0); // a Vector with only an x component
+        v_x2 = new sw_game.Vector(10, 0);
+        v_y1 = new sw_game.Vector(0, 5); // a Vector with only an y component
+        v_y2 = new sw_game.Vector(0, 10);
+        v_fortyfive = new sw_game.Vector(1,1);
+        v_thirtysixty = new sw_game.Vector(Math.sqrt(3), 1);
+      }
+      function tearDown(){
+        v_empty = null; v_x1 = null; v_x2 = null; v_y1 = null; v_y2 = null;
+        v_fortyfive = null; v_thirtysixty = null;
+      }
+
+      function testCreate(){
+        var newVector = new sw_game.Vector();
+        assertEquals("New vector should have x initialized to 0", newVector.x, 0);
+        assertEquals("New vector should have y initialized to 0", newVector.y, 0);
+        newVector = 0;
+        var init_value_x = 5;
+        var init_value_y = 10;
+        var newVector = new sw_game.Vector(5, 10);
+        assertEquals("New vector should have x initialized to "+init_value_x, newVector.x, init_value_x);
+        assertEquals("New vector should have y initialized to "+init_value_y, newVector.y, init_value_y);
+        newVector = null;
+        init_value_x = null;
+        init_value_y = null;
+      }
+      function testAddVectors(){
+        assert("Adding vectors should return a vector", typeof(v_x1.add(v_x2)) === "object" );
+        var expected_output = v_x1.x+v_x2.x;
+        assertEquals("The sum of vectors with x values should yield a vector who's x value is their sum", 
+          (v_x1.add(v_x2)).x, expected_output);
+        var expected_output = v_y1.y+v_y2.y;
+        assertEquals("The sum of vectors with y values should yield a vector who's y value is their sum",
+          (v_y1.add(v_y2)).y, expected_output);
+        expected_output = null; //deallocate
+      }
+      function testAddScalar(){
+        var res = v_x1.addScalar(5);
+        assertEquals("Adding a scalar to vector with only x length should increase it's x length",
+          10, res.x);
+        assertEquals("Adding a scalar to vector with only x length should not increase it's y length",
+          0, res.y);
+        res = v_y1.addScalar(5);
+        assertEquals("Adding a scalar to vector with only y length should increase it's y length",
+          10, res.y);
+        assertEquals("Adding a scalar to vector with only y length should not increase it's x length",
+          0, res.x);
+        //TODO: flesh these out
+        var pre_heading = v_thirtysixty.heading();
+        var pre_magnitude = v_thirtysixty.mag();
+        res = sw_game.Vector.addScalarToVector(v_thirtysixty,5);
+        assertEquals("Adding a scalar to vector should not modify it's heading", 
+          res.heading(), pre_heading);
+        assert("Adding a scalar to vector should change it's hypotenuse", 
+          res.magnitude() != pre_magnitude);
+        res = sw_game.Vector.addScalarToVector(v_thirtysixty, -5);
+        assert("Adding a negative scalar to vector should reduce it's hypotenuse", 
+          res.magnitude() < pre_magnitude);
+        //deallocate the variables
+        var pre_heading = null; var res = null;
+      }
+      function testHeading(){
+        assertTrue("Heading for a 30-60-90 triangle should be 30 degrees", 
+          isFloatEQ( radiansToDegrees(v_thirtysixty.heading()), 30.0)) ;
+        assertTrue("Heading for a 30-60-90 triangle should be 30 degrees (in radians)", 
+          isFloatEQ(v_thirtysixty.heading(), degreesToRadians(30)) );
+        assertTrue("Heading for a 45-45-90 triangle should be 45 degrees", 
+          isFloatEQ(radiansToDegrees(v_fortyfive.heading()), 45.0) );
+        assertTrue("Heading for a 45-45-90 triangle should be 45 degrees (in radians)", 
+          isFloatEQ(v_fortyfive.heading(), degreesToRadians(45)) );
+      }
+      function testGetAngle(){
+         //v_fortyfive = null; v_thirtysixty = null;
+        //console.log('DEBUG:TEST fortyfive =>'+v_fortyfive+' x val=>'+v_fortyfive.x+' y_val=>'+v_fortyfive.y);
+        //assert("Angle between a (x,0) and a (0,y) vector should be 90 degrees", true);
+        assertTrue("Angle between a (x,0) and a (0,y) vector should be 90 degrees",
+          isFloatEQ(v_x1.getAngleBetween(v_y1), degreesToRadians(90) ));
+        //assert("Angle between (x,0) and 45-45-90 vector should be 45 degrees",true);
+        assertTrue("Angle between (x,0) and 45-45-90 vector should be 45 degrees",
+          isFloatEQ(v_x1.getAngleBetween(v_fortyfive), degreesToRadians(45) ));
+        //assert("Angle between (x,0) and 30-60-90 vector should be 30 degrees",true);
+        assertTrue("Angle between (x,0) and 30-60-90 vector should be 30 degrees",
+          isFloatEQ(v_x1.getAngleBetween(v_thirtysixty), degreesToRadians(30) ));
+      }
+      function testFloatComparison(){
+        var test_delta = 0.001;
+        assertFalse("test equality with floats difference greater than delta", 
+          isFloatEQ(1.0, 3.0, test_delta));
+        assertTrue("test equality with floats difference less than delta", 
+          isFloatEQ(1.0, 1.0001, test_delta));
+
+        assertTrue("test less than with f1<f2",
+          isFloatLT(1.0, 1.009, test_delta));
+        assertFalse("test less than with f1==f2", 
+          isFloatLT(1.0, 0.9999, test_delta));
+        assertFalse("test less than with f1>f2",
+          isFloatLT(1.0, 0.909, test_delta));
+
+        assertTrue("test greater than with f1<f2",
+          isFloatGT(1.0, 0.9, test_delta));
+        assertFalse("test greater than with f1==f2",
+          isFloatGT(1.0, 0.9999, test_delta));
+        assertFalse("test greater than with f1>f2", 
+          isFloatGT(1.0, 1.9, test_delta));
+
+        assertFalse("test >= with f1<f2",
+          isFloatGTE(1.0, 2.01, test_delta));
+        assertTrue("test >= with f1==f2",
+          isFloatGTE(1.0, 0.9999, test_delta));
+        assertTrue("test >= with f1>f2", 
+          isFloatGTE(1.0, 0.99, test_delta));
+
+        assertFalse("test <= with f1>f2", 
+          isFloatLTE(1.0, 0.990, test_delta));
+        assertTrue("test <= with f1==f2", 
+          isFloatLTE(1.0, 0.9999, test_delta));
+        assertTrue("test <= with f1<f2", 
+          isFloatLTE(1.0, 3.990, test_delta));
+        test_delta = null;
+      }
+      /* Tests to be written
+      function testVectorDotProduct(){}
+      function testVectorMagnitude(){}
+      */
+    </script>
+  </body>
+</html>
