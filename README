@@ -1,5 +1,5 @@
 Starwings (working title)
-Last-modified: 27 Apr 2011 02:22:40 PM
+Last-modified: 29 Apr 2011 02:01:01 PM
 
 Created by
 ==========
@@ -16,14 +16,11 @@ the Crafty js game engine.
 
 LEFT OFF
 ==========
-Building unit tests (for vector first) but having trouble with the setUp()
-function
-Work on rotation
-Just tested that applying force does work.  Now need to create a function/
-system which converts from game units to screen units.
-Build the engine component or object which attaches to the ship
 Build the inertial dampener system
 Flesh out the helm controller to apply thrust properly
+Write tests for physics component
+Build the engine component or object which attaches to the ship
+Create a function/system which converts from game units to screen units.
 
 In this Version
 ==========
@@ -47,6 +44,10 @@ With that we must think of units.  With units we must think of scale. Am I
 overthinking things? maybe...
 
 Currently working on/TODO
+ver - 0.2.1
+==========
+- Wrote unit tests for util functions
+
 ver - 0.2
 ==========
 - Thinking about adding unit tests for vector and physics classes

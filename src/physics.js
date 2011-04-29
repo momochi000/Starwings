@@ -5,6 +5,10 @@
  */
 //IN PROGRESS: building the applyforce function and related.  Need to do 
 //the same with angular velocity
+//ALSO, in the game logic, ensure that the object does not surpass
+//it's maximum velocity or acceleration.  This does not relate to 
+//physics as explosions or other effects may push a ship beyond
+//max accel. Max accel merely relates to engine performance
 
 if(typeof(sw_game) === 'undefined'){var sw_game={}; }
 
@@ -27,43 +31,28 @@ Crafty.c('SWPhysics', {
   addForce: function(force){ //add a force to this object
     this._force.add(force);
   },
-  applyForce: function(){ // applies the force vector to self.
-    //console.log("applying force: x=>"+this._force.x+" y=>"+ this._force.y );
-    //var result_accel = new sw_game.Vector(this._force.x/this._mass, this._force.y/this._mass); //calculate new acceleration
-    //this._accel.add(result_accel); //add new accel to current accel
+  // This applies the force vector to self.
+  applyForce: function(){
     this._accel.x = this._force.x/this._mass;
     this._accel.y = this._force.y/this._mass;
   },
   rotate: function (deg){
     this._orientation = (this._orientation + deg) % 360;
+    console.log("Rotating this object, new orientation => "+ this._orientation);
+    this.rotation = this._orientation;
+    console.log("Checking status of the (2d)rotation => "+ this.rotation);
   },
-  updatePos: function (){ //update the entity position
   //TODO: BIG DISTINCTION: this.x is referring to the 2D component
   //(the double edged sword that is multiple inheritence). We want to keep
   //the x and y coords (representing position on screen separate from the
   //physical (game) coordinates which should be stored here, then have a 
   //function which translates between them
+  updatePos: function (){ //update the entity position
     this.x += this._vel.x;
     this.y += this._vel.y;
   },
   updateVel: function (){ //update the velocity given accel
     this._vel.add(this._accel);
-  /*
-    var newXVel = oldv.x += accel.x;
-    var newYVel = oldv.y += accel.y;
-    if(Math.abs(newXVel) > maxvel.x){
-      if(newXVel > 0) this._vel.x = maxvel.x;
-      if(newXVel < 0) this._vel.x = -maxvel.x;
-    }else{
-      this._vel.x = newXVel;
-    }
-    if(Math.abs(newYVel) > maxvel.y){
-      if(newYVel > 0) this._vel.y = maxvel.y;
-      if(newYVel < 0) this._vel.y = -maxvel.y;
-    }else{
-      this._vel.y = newYVel;
-    }
-    */
   },
   //update the accel based on the input force.  Accel in m/s^2
   //force in N.  I think this will be handled by apply force instead
@@ -71,23 +60,6 @@ Crafty.c('SWPhysics', {
     //this.accel.add(incr);
     this.accel.x = force.x / this._mass;
     this.accel.y = force.y / this._mass;
-    /*
-    var newXAccel = olda.x += incr.x;
-    var newYAccel = olda.y += incr.y;
-    if(typeof(maxaccel) === 'undefined'){maxaccel = 99999999}
-    if(Math.abs(newXAccel) > maxaccel.x){
-      if(newAccel.x > 0) this._vel.x = maxaccel.x;
-      if(newAccel.x < 0) this._vel.x = -maxaccel.x;
-    }else{
-      this._vel.x = newAccel.x;
-    }
-    if(Math.abs(newYAccel) > maxaccel.y){
-      if(newAccel.y > 0) this._vel.y = maxaccel.y;
-      if(newAccel.y < 0) this._vel.y = -maxaccel.y;
-    }else{
-      this._vel.y = newAccel.y;
-    }
-    */
   },
   updateOrientation: function(){ //rotate the entity
     this.rotate(this._angular_vel);

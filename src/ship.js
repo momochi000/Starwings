@@ -1,5 +1,5 @@
 /*   SHIP definitions. 
- *   Last-modified: 25 Apr 2011 11:57:16 AM
+ *   Last-modified: 29 Apr 2011 11:30:00 AM
  *   Here we'll declare stats (attributes) for various ship types that we can
  *   refer to elsewhere, thus keeping things nice and neat.
  *   We should also include the sprite used for this.
@@ -74,10 +74,18 @@ Crafty.c('SWShip', {
   //engage yaw thrusters
     };
     this.bind('enterframe', function () {
-      if(this.__move.up){// lets apply a test force to the ship
+// lets apply a test force to the ship
+      if(this.__move.up){
         //this._force.x = 5;
         //this._force.y = 5;
         //console.log('ARE WE GETTING HRE????');
+      }
+// apply a test rotation to the ship
+      if(this.__move.left){
+        this._angular_vel = 3;
+      }
+      if(this.__move.right){
+        this._angular_vel = -3;
       }
       //handle the engine output based on input from helm control
     });
