@@ -1,5 +1,5 @@
 /* Miscellaneous utility functions and classes for starwings game
- * Last-modified: 05 May 2011 01:00:07 PM
+ * Last-modified: 07 May 2011 03:05:26 PM
  * Written by: zachery chin
  *
  * This file contains some utility functions and classes used by the game
@@ -12,7 +12,7 @@
 if(typeof(sw_game) === 'undefined'){var sw_game = {}; }
 
 //GLOBALS
-var DEFAULT_COMPARATOR_DELTA = 0.00001;
+var DEFAULT_COMPARATOR_DELTA = 0.0001;
 var PI = 3.141592653589793238462643383;
 var TWO_PI = PI*2.0;
 var HALF_PI = PI*0.5;
@@ -196,18 +196,33 @@ sw_game.Vector = function (x, y){
     return sw_game.Vector.direction(this.x, this.y);
   };
   this.isZero = function(){ //return true if the vector is 0,0 or close enough to it
-    if(this.x == 0 && this.y == 0) return true;
+    if(isFloatEQ(this.x, 0) && isFloatEQ(this.y, 0)) return true;
+    if(this.x === NaN || this.y === NaN) return true;
     return false;
   };
   this.magnitude = function (){
     return Math.sqrt(this.x*this.x + this.y*this.y);
   };
-  this.mag = function (){ return this.magnitude(); }//alias for magnitude
+  this.mag = function (){ return this.magnitude(); };//alias for magnitude
   this.multiply = function (other_v){
   };
   this.plus = function (other_v){ //like add but doesn't change value
     return sw_game.Vector.addVectors(this, other_v);
-  }
+  };
+  //Set this vector using an angle and a distance
+  this.setWithAngleAndDistance = function (angle, distance, inRadians) {
+    if(typeof(inRadians) === 'undefined'){
+      inRadians = true;
+    }
+    if(inRadians){
+      this.x = distance * Math.cos(angle);
+      this.y = distance * Math.sin(angle);
+    }else{
+      this.x = distance * Math.cos(degreesToRadians(angle));
+      this.y = distance * Math.sin(degreesToRadians(angle));
+    }
+    return this;
+  };
   this.subtract = function (other_v){
     this.x-=other_v.x;
     this.y-=other_v.y;
@@ -223,6 +238,22 @@ sw_game.Vector = function (x, y){
   var that=this;
 }
 //class methods
+sw_game.Vector.addAngles = function (a1, a2, inRadians) {
+  if(typeof(inRadians) === 'undefined'){
+    inRadians=true;
+  }
+  var res = a1+a2;
+  if(inRadians){
+    while(res > (4*Math.PI)){
+      res = res-(4*Math.PI);
+    }
+  }else{
+    while(res > 360){
+      res = res-360;
+    }
+  }
+  return res;
+}
 /* class method to add two vectors.  Returns a vector that is the sum of
  * both without modifying either*/
 sw_game.Vector.addVectors = function (v1, v2) {
@@ -262,6 +293,15 @@ sw_game.Vector.direction = function (x, y) {
   }else{
     return Math.atan(y/x)+PI;
   }
+}
+/* Find the shortest angle between two vectors v1 and v2
+ */
+sw_game.Vector.getShortestAngleBetween = function (v1, v2) {
+  var result = abs(v1.heading()-v2.heading());
+  while(result > (2*Math.PI)){
+    result=(4*Math.PI) - result;
+  }
+  return result;
 }
 // END VECTOR CLASS ============================
 

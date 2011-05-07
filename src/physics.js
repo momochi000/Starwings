@@ -58,6 +58,7 @@ Crafty.c('SWPhysics', {
     this.updateVelWithAccel(this._accel);
   },
   updateVelWithAccel: function (acceleration_vector) {
+    if(acceleration_vector.isZero()) return false; // do nothing
     //console.log("===");
     //console.log("DEBUG:PHYSICS:UPDATEVEL: Frame number: => "+Crafty.frame());
     //console.log("DEBUG:PHYSICS:UPDATEVEL:Input accel => "+acceleration_vector.to_s());

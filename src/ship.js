@@ -1,5 +1,5 @@
 /*   SHIP definitions. 
- *   Last-modified: 06 May 2011 06:20:29 PM
+ *   Last-modified: 07 May 2011 03:11:11 PM
  *   Here we'll declare stats (attributes) for various ship types that we can
  *   refer to elsewhere, thus keeping things nice and neat.
  *   We should also include the sprite used for this.
@@ -65,49 +65,24 @@ Crafty.c('SWShip', {
   //generates an acceleration then affects the velocity with that accel
   _iDamperEffect: function () { 
     var new_accel = new sw_game.Vector();
-    //if( sign(this._vel.x) != (sign((this._force.x)) && (this._vel.x != 0)) ){
-    /********
-    if( sign(this._vel.x) != (sign(this._force.x))) {
-      if(!isFloatEQ(this._vel.x, 0, 1)){
-        if(sign(this._vel.x) > 0){
-          new_accel.x = -1*this._iDamper;
-        }else if(sign(this._vel.x) < 0){
-          new_accel.x = this._iDamper;
-        }
-      }
+    var damp_power = 0;
+    var theta = this._force.getAngleBetween(this._vel);
+    if(this._force.isZero()){
+      damp_power = 1;
+    }else if(theta >= 2*Math.PI){
+      damp_power = 1;
+    }else if(theta == 0){
+      damp_power = 0;
+    }else if(theta == NaN){
+      damp_power = 0;
+    }else{
+      damp_power = Math.PI/2 * (theta);//calculate the appropriate amount of inertial dampening
     }
-    //if(sign(this._vel.y) != (sign((this._force.y)) && (this._vel.y != 0)) ){
-    if(sign(this._vel.y) != (sign((this._force.y)) )){
-      if(!isFloatEQ(this._vel.y, 0, 1)){
-        if(sign(this._vel.y) > 0){
-          new_accel.y = -1*this._iDamper;
-        }else if(sign(this._vel.y) < 0){
-          new_accel.y = this._iDamper;
-        }
-      }
-    }
-    */
-    if((sign(this._vel.x) != sign(this._force.x)) && (!isFloatEQ(this._vel.x, 0, 0.1))){
-      if(sign(this._vel.x) > 0){
-        new_accel.x = -1*this._iDamper;
-      }else if(sign(this._vel.x) < 0){
-        new_accel.x = this._iDamper;
-      }
-    }
-    if((sign(this._vel.y) != sign(this._force.y)) && (!isFloatEQ(this._vel.y, 0, 0.1))){
-      if(sign(this._vel.y) > 0){
-        new_accel.y = -1*this._iDamper;
-      }else if(sign(this._vel.y) < 0){
-        new_accel.y = this._iDamper;
-      }
-    }
+    new_accel.setWithAngleAndDistance(sw_game.Vector.addAngles(
+      Math.PI, this._vel.heading()), 
+      damp_power*this._iDamper);
 
     if(!new_accel.isZero()){
-//      console.log("DEBUG:SHIP:ENGAGE_I_DAMPER=======================");
-//      console.log("Current velocity=> "+this._vel.to_s());
-//      console.log("Input thrust=> "+this._force.to_s());
-//      console.log("I_damper accel=> "+new_accel.to_s());
-//      console.log("----\n");
       this.updateVelWithAccel(new_accel);
     }
     new_accel = null;
@@ -120,18 +95,12 @@ Crafty.c('SWShip', {
     if(typeof(power) === 'undefined'){ power = 1; }
     //LEFT OFF: Write this
     var newForce = new sw_game.Vector();
-    //console.log('DEBUG:ImpulseDrive: checking new (blank) vector => '+newForce.to_s());
     var force_mag = power * this._maxThrust;
-    //console.log('DEBUG:ImpulseDrive: force_magnitude => '+force_mag);
     var theta = degreesToRadians(this._orientation); //subtract 90 to rotate to ship nose
-    //console.log('DEBUG:ImpulseDrive: angle in rads => '+theta);
     newForce.x = force_mag*Math.cos(theta);
     newForce.y = force_mag*Math.sin(theta);
     this._force.add(newForce);
-    //console.log('DEBUG:ImpulseDrive: checking vector '+newForce.to_s());
-    //console.log('DEBUG:ImpulseDrive: checking FORCE VECTOR '+this._force.to_s());
-    //clear out local variables
-    newForce = null; force_mag = null; theta = null;
+    newForce = null; force_mag = null; theta = null;//clear local vars
   },
   SWShip: function (ship_type){ // Constructor
     this._maxYaw = ship_type['max_yaw'];

@@ -1,5 +1,5 @@
 Starwings (working title)
-Last-modified: 05 May 2011 02:04:58 PM
+Last-modified: 07 May 2011 03:12:09 PM
 
 Created by
 ==========
@@ -17,16 +17,10 @@ the Crafty js game engine.
 LEFT OFF
 ==========
 next steps: 
- - Test applying a thrust to the ship and see that the dampner, successfully slows the ship.
-   Damper seems twitchy, i'm thinking when the value is close to 0 the sign function
-   is flipping positive and negative.  Any negative or positive velocity will trigger
-   the idamper fnction, but we want it to stop when sufficiently close to 0
-   Velocity reads/behaves strangely when close to 0.
- - Now ready to begin work on helm control
+ - begin work on helm control
 
 TODO
 ==========
-Build the inertial dampener system
 Flesh out the helm controller to apply thrust properly
 BUILD AND INSTALL NODE.JS to use this js vim plugin thingy.
 Write tests for physics component
@@ -42,6 +36,7 @@ Added unit tests (JS unit)
 Added main impulse drive engine
 Added inertial dampener to ship
 Added a few tests for util, sign function
+Worked out and integrated inertial dampener v1
 
 Code Quirks
 ==========

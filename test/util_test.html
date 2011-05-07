@@ -140,6 +140,22 @@
         //compareFloatsWithDelta()
         test_delta = null;
       }
+      function testSetWithAngle(){
+        var testVect = new sw_game.Vector();
+        testVect.setWithAngleAndDistance(0, 1);
+        assertTrue("Vector of 0 degrees length of 1 has x=1", isFloatEQ(testVect.x, 1));
+        assertTrue("Vector of 0 degrees length of 1 has y=0", isFloatEQ(testVect.y, 0));
+
+        testVect.setWithAngleAndDistance(Math.PI/2, 1);
+        assertTrue("Vector of 90 degrees length of 1 has x=0", isFloatEQ(testVect.x, 0));
+        assertTrue("Vector of 90 degrees length of 1 has y=1", isFloatEQ(testVect.y, 1));
+        testVect.setWithAngleAndDistance(Math.PI/4, 1);
+        assertTrue("Vector of 45 degrees length of 1 has x=sqrt(2)", 
+          isFloatEQ(testVect.x, Math.sqrt(2)/2) );
+        assertTrue("Vector of 45 degrees length of 1 has y=sqrt(2)", 
+          isFloatEQ(testVect.y, Math.sqrt(2)/2) );
+        testVect = null;
+      }
       function testSign(){
         assertEquals("positive value should return 1", sign(10), 1);
         assertEquals("negative value should return -1", sign(-10), -1);
