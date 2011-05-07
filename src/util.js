@@ -1,5 +1,5 @@
 /* Miscellaneous utility functions and classes for starwings game
- * Last-modified: 29 Apr 2011 10:56:54 AM
+ * Last-modified: 05 May 2011 01:00:07 PM
  * Written by: zachery chin
  *
  * This file contains some utility functions and classes used by the game
@@ -118,6 +118,19 @@ function roundToZero(val){
   }
   return val;
 }
+//Function that reports whether a given value is negative, positive, or zero
+//Returns -1 if the value is < 0, returns 1 if greater than 0 and 0 if == 0
+function sign(val){
+  if(isFloatLT(val,0, .01)){
+    return -1;
+  }else if(isFloatGT(val,0, .01)){
+    return 1;
+  }else if(isFloatEQ(val,0, .01)){
+    return 0;
+  }
+  console.log("DEBUG:UTIL:SIGN() ==> Are we getting here? never should");
+  return val;
+}
 
 /*Takes in an object and returns the keys.
  * by keys I mean specifically hash keys
@@ -202,6 +215,10 @@ sw_game.Vector = function (x, y){
   };
   this.sub = function () { return subtract(); };//alias for subtract
   this.size = function (){ return magnitude(); };//alias for magnitude
+  //a string representation of the vector (for debug)
+  this.to_s = function () { return( "x: "+this.x+", y: "+this.y); 
+  } 
+  this.to_string = function () { return this.to_s; } //alias for to_s
   this.zero = function (){ this.x = 0; this.y = 0; };
   var that=this;
 }
@@ -270,23 +287,5 @@ sw_game.isOnScreen = function (testObj, gameDims){
   return true;
 }
 
-/*
-function testScreenBorderLeft(testObj, gameDims){
-  if(testObj.x<=0) return true;
-  return false;
-}
-function testScreenBorderRight(testObj, gameDims){
-  if(testObj.x+testObj.w >= gameDims.w) return true;
-  return false;
-}
-function testScreenBorderTop(testObj, gameDims){
-  if(testObj.y<=0) return true;
-  return false;
-}
-function testScreenBorderBottom(testObj, gameDims){
-  if(testObj.y+testObj.h >= gameDims.h) return true;
-  return false;
-}
-*/
 
 sw_game.dependencies.included('util');

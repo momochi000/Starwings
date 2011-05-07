@@ -33,26 +33,39 @@ Crafty.c('SWPhysics', {
   },
   // This applies the force vector to self.
   applyForce: function(){
+    //console.log("Calling apply force => ", this._force.to_s());
     this._accel.x = this._force.x/this._mass;
     this._accel.y = this._force.y/this._mass;
+    //console.log("Calling apply force => Resultant accel: ", this._accel.to_s());
   },
   rotate: function (deg){
     this._orientation = (this._orientation + deg) % 360;
-    console.log("Rotating this object, new orientation => "+ this._orientation);
-    this.rotation = this._orientation;
-    console.log("Checking status of the (2d)rotation => "+ this.rotation);
+    //console.log("Rotating this object, new orientation => "+ this._orientation);
+    this.rotation = this._orientation+90; //rotation is a feature of the 2D component
+    //console.log("Checking status of the (2d)rotation => "+ this.rotation);
   },
-  //TODO: BIG DISTINCTION: this.x is referring to the 2D component
-  //(the double edged sword that is multiple inheritence). We want to keep
-  //the x and y coords (representing position on screen separate from the
-  //physical (game) coordinates which should be stored here, then have a 
-  //function which translates between them
+  //TODO: Rather than simply multiply by timestep, we need to check against
+  //the previous frame to see if we've skipped or lost any frames.
   updatePos: function (){ //update the entity position
-    this.x += this._vel.x;
-    this.y += this._vel.y;
+    //this.x += this._vel.x;
+    this._world_posX += (this._vel.x * sw_game.TIMESTEP)
+    this.x += (this._vel.x * sw_game.TIMESTEP) // for now also mirror the 2d obj coord
+    //this.y += this._vel.y;
+    this._world_posY += (this._vel.y * sw_game.TIMESTEP)
+    this.y += (this._vel.y * sw_game.TIMESTEP)
   },
   updateVel: function (){ //update the velocity given accel
-    this._vel.add(this._accel);
+    this.updateVelWithAccel(this._accel);
+  },
+  updateVelWithAccel: function (acceleration_vector) {
+    //console.log("===");
+    //console.log("DEBUG:PHYSICS:UPDATEVEL: Frame number: => "+Crafty.frame());
+    //console.log("DEBUG:PHYSICS:UPDATEVEL:Input accel => "+acceleration_vector.to_s());
+    //console.log("DEBUG:PHYSICS:UPDATEVEL:pre velocity => "+this._vel.to_s());
+    this._vel.x += (acceleration_vector.x * sw_game.TIMESTEP)
+    this._vel.y += (acceleration_vector.y * sw_game.TIMESTEP)
+    //console.log("DEBUG:PHYSICS:UPDATEVEL:post velocity => "+this._vel.to_s());
+    //console.log("===================");
   },
   //update the accel based on the input force.  Accel in m/s^2
   //force in N.  I think this will be handled by apply force instead
@@ -64,6 +77,9 @@ Crafty.c('SWPhysics', {
   updateOrientation: function(){ //rotate the entity
     this.rotate(this._angular_vel);
   },
+  zeroVel: function (){
+    this._vel.zero;
+  },
   SWPhysics: function (mass){  //constructor
     this._accel = new sw_game.Vector(0,0);
     this._force = new sw_game.Vector(0,0);
@@ -71,6 +87,7 @@ Crafty.c('SWPhysics', {
     this._vel = new sw_game.Vector(0,0);
     this.bind('enterframe', function () {
       this.applyForce(); // update the accel based on forces acting on self
+      this._force.zero(); //after thrust is applied, it should be zeroed?
       this.updateVel(); //calculate new velocity based on accel
       this.updatePos(); //calculate new position based on velocity
       //update the orientation of self based on any angular momentum

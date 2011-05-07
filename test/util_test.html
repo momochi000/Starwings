@@ -135,7 +135,17 @@
           isFloatLTE(1.0, 0.9999, test_delta));
         assertTrue("test <= with f1<f2", 
           isFloatLTE(1.0, 3.990, test_delta));
+
+        //Need to write tests for this :
+        //compareFloatsWithDelta()
         test_delta = null;
+      }
+      function testSign(){
+        assertEquals("positive value should return 1", sign(10), 1);
+        assertEquals("negative value should return -1", sign(-10), -1);
+        assertEquals("zero value should return 0", sign(0), 0);
+        assertEquals("positive value sufficiently close to 0 should return 0", sign(0.00001), 0);
+        assertEquals("negative value sufficiently close to 0 should return 0", sign(-0.00001), 0);
       }
       /* Tests to be written
       function testVectorDotProduct(){}

@@ -1,5 +1,5 @@
 /* Written by Zachery Chin
- * Last-modified: 29 Apr 2011 11:54:38 AM
+ * Last-modified: 04 May 2011 05:43:36 PM
  * 
  * This file deals with the player entity and handling user input
  */
@@ -20,6 +20,7 @@ Crafty.c('PlayerControls', {
     this.bind('enterframe', function(){
       //calculate the control vector based on the state of the inputs
     }).bind('keydown', function(e){
+      if(e.keyCode === Crafty.keys.P){Crafty.pause();}
       if(e.keyCode===Crafty.keys.RIGHT_ARROW) move.right=true;
       if(e.keyCode===Crafty.keys.LEFT_ARROW) move.left=true;
       if(e.keyCode===Crafty.keys.UP_ARROW) move.up=true;
@@ -51,10 +52,11 @@ Crafty.c('PlayerControls', {
 sw_game.Player.createPlayer = function (){
   var playerShip = Crafty.e("2D, DOM, spr_player, Controls, PlayerControls, SWShip, SWPhysics, Collision")
     .attr({x: 40, y: 50, })
-    .SWShip(sw_game.Ship.SHIPS['standard'])
     .SWPhysics(sw_game.Ship.SHIPS['standard']['mass'])
+    .SWShip(sw_game.Ship.SHIPS['standard'])
     .PlayerControls();
   playerShip.origin(16,16); //set the center of the ship for rotation purposes
+  //playerShip.rotation = 
   return playerShip;
 };
 

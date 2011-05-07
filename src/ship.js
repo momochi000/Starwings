@@ -1,5 +1,5 @@
 /*   SHIP definitions. 
- *   Last-modified: 29 Apr 2011 11:30:00 AM
+ *   Last-modified: 06 May 2011 06:20:29 PM
  *   Here we'll declare stats (attributes) for various ship types that we can
  *   refer to elsewhere, thus keeping things nice and neat.
  *   We should also include the sprite used for this.
@@ -17,11 +17,12 @@ sw_game.Ship.PL_SPEED_TO_ANIM_FRAME = [
 
 sw_game.Ship.SHIPS = {
   'standard': {
-    'inertial_damper': [0.195, 0.245],
+    'inertial_damper': 80.0,
     'mass': 4000,
     'max_speed': 400,
     'max_accel': 50,
-    'max_thrust': 80,
+    //'max_thrust': 80000,
+    'max_thrust': 600000,
     'max_yaw': 8, //in degrees/sec
     'dim_h': 32, //in pixels
     'dim_w': 32, //in pixels
@@ -59,13 +60,86 @@ Crafty.c('SWShip', {
   _maxVel: 0,
   _maxAccel: 0,
   _maxThrust: 0,
-  _idamper: 0,
+  _iDamper: 0,
+  _iDamperActive: false,
+  //generates an acceleration then affects the velocity with that accel
+  _iDamperEffect: function () { 
+    var new_accel = new sw_game.Vector();
+    //if( sign(this._vel.x) != (sign((this._force.x)) && (this._vel.x != 0)) ){
+    /********
+    if( sign(this._vel.x) != (sign(this._force.x))) {
+      if(!isFloatEQ(this._vel.x, 0, 1)){
+        if(sign(this._vel.x) > 0){
+          new_accel.x = -1*this._iDamper;
+        }else if(sign(this._vel.x) < 0){
+          new_accel.x = this._iDamper;
+        }
+      }
+    }
+    //if(sign(this._vel.y) != (sign((this._force.y)) && (this._vel.y != 0)) ){
+    if(sign(this._vel.y) != (sign((this._force.y)) )){
+      if(!isFloatEQ(this._vel.y, 0, 1)){
+        if(sign(this._vel.y) > 0){
+          new_accel.y = -1*this._iDamper;
+        }else if(sign(this._vel.y) < 0){
+          new_accel.y = this._iDamper;
+        }
+      }
+    }
+    */
+    if((sign(this._vel.x) != sign(this._force.x)) && (!isFloatEQ(this._vel.x, 0, 0.1))){
+      if(sign(this._vel.x) > 0){
+        new_accel.x = -1*this._iDamper;
+      }else if(sign(this._vel.x) < 0){
+        new_accel.x = this._iDamper;
+      }
+    }
+    if((sign(this._vel.y) != sign(this._force.y)) && (!isFloatEQ(this._vel.y, 0, 0.1))){
+      if(sign(this._vel.y) > 0){
+        new_accel.y = -1*this._iDamper;
+      }else if(sign(this._vel.y) < 0){
+        new_accel.y = this._iDamper;
+      }
+    }
+
+    if(!new_accel.isZero()){
+//      console.log("DEBUG:SHIP:ENGAGE_I_DAMPER=======================");
+//      console.log("Current velocity=> "+this._vel.to_s());
+//      console.log("Input thrust=> "+this._force.to_s());
+//      console.log("I_damper accel=> "+new_accel.to_s());
+//      console.log("----\n");
+      this.updateVelWithAccel(new_accel);
+    }
+    new_accel = null;
+  },
+  //Engages the main impulse engine for the ship.  Applies a thrust
+  //Directly behind the ship (based on it's orientation)
+  //Amount of thrust applied is proportional to it's total power *
+  //the input power which is a float between 0 and 1
+  _impulseDrive: function (power) {
+    if(typeof(power) === 'undefined'){ power = 1; }
+    //LEFT OFF: Write this
+    var newForce = new sw_game.Vector();
+    //console.log('DEBUG:ImpulseDrive: checking new (blank) vector => '+newForce.to_s());
+    var force_mag = power * this._maxThrust;
+    //console.log('DEBUG:ImpulseDrive: force_magnitude => '+force_mag);
+    var theta = degreesToRadians(this._orientation); //subtract 90 to rotate to ship nose
+    //console.log('DEBUG:ImpulseDrive: angle in rads => '+theta);
+    newForce.x = force_mag*Math.cos(theta);
+    newForce.y = force_mag*Math.sin(theta);
+    this._force.add(newForce);
+    //console.log('DEBUG:ImpulseDrive: checking vector '+newForce.to_s());
+    //console.log('DEBUG:ImpulseDrive: checking FORCE VECTOR '+this._force.to_s());
+    //clear out local variables
+    newForce = null; force_mag = null; theta = null;
+  },
   SWShip: function (ship_type){ // Constructor
     this._maxYaw = ship_type['max_yaw'];
     this._maxVel = ship_type['max_speed'];
     this._maxAccel = ship_type['max_accel'];
     this._maxThrust = ship_type['max_thrust'];
-    this.helmController = function (){
+    this._iDamper = ship_type['inertial_damper'];
+    this.helmController = function (){ // TODO: IN PROGRESS
       var heading = this._helmControl.heading();
       if(heading){
       }
@@ -74,20 +148,28 @@ Crafty.c('SWShip', {
   //engage yaw thrusters
     };
     this.bind('enterframe', function () {
-// lets apply a test force to the ship
+      // lets apply a test force to the ship
       if(this.__move.up){
+        this._impulseDrive();
         //this._force.x = 5;
         //this._force.y = 5;
-        //console.log('ARE WE GETTING HRE????');
       }
-// apply a test rotation to the ship
+      // apply a test rotation to the ship
       if(this.__move.left){
-        this._angular_vel = 3;
-      }
-      if(this.__move.right){
         this._angular_vel = -3;
       }
+      if(this.__move.right){
+        this._angular_vel = 3;
+      }
+      // if no input, then disable all engines
+      if(!this.__move.left && !this.__move.right){
+        this._angular_vel = 0;
+      }
       //handle the engine output based on input from helm control
+      //inertial damper affects velocity
+    });
+    this.bind('enterframe', function() {
+      this._iDamperEffect();
     });
     return this;
   }

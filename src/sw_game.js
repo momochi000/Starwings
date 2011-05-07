@@ -1,6 +1,6 @@
 /*
  Written by: Zachery Chin
- Last-modified: 28 Apr 2011 01:50:23 PM
+ Last-modified: 05 May 2011 02:01:47 PM
 
 
  Shooter game: 
@@ -15,7 +15,10 @@ if(typeof(sw_game)==='undefined'){ sw_game = {};};
 
 /*CONSTANTS*/
 sw_game.FRAMERATE = 60; //in FPS
-sw_game.TIMESTEP = 0.0166667; // 1/FRAMERATE
+//sw_game.TIMESTEP = 0.0166667; // 1/FRAMERATE
+sw_game.TIMESTEP = 1/sw_game.FRAMERATE;
+//sw_game.frameCount = 0; // no need for this, crafty keeps track with Crafty.frame()
+
 
 var SPR_PLAYER_SHIP = "assets/player01.png"; //Note: paths are relative to the html file which includes this
 //var SPR_BULLET01 = "bullet01_0.png"; //2 frames
@@ -30,8 +33,8 @@ window.onload=function(){
  //current window size.
   gameHeight=window.innerHeight-4; //-4 for the border
   gameWidth=window.innerWidth-4;
-  //Crafty.init(sw_game.FRAMERATE, gameWidth, gameHeight);
-  Crafty.init(gameWidth, gameHeight);
+  //Crafty.init(gameWidth, gameHeight);
+  Crafty.init(sw_game.FRAMERATE, gameWidth, gameHeight);
   Crafty.canvas();
 
   //can we move this outside of window.onload?
