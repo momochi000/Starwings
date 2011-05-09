@@ -1,5 +1,5 @@
 /*   SHIP definitions. 
- *   Last-modified: 07 May 2011 03:11:11 PM
+ *   Last-modified: 08 May 2011 10:59:25 PM
  *   Here we'll declare stats (attributes) for various ship types that we can
  *   refer to elsewhere, thus keeping things nice and neat.
  *   We should also include the sprite used for this.
@@ -23,7 +23,7 @@ sw_game.Ship.SHIPS = {
     'max_accel': 50,
     //'max_thrust': 80000,
     'max_thrust': 600000,
-    'max_yaw': 8, //in degrees/sec
+    'max_yaw': 3, //in degrees/sec
     'dim_h': 32, //in pixels
     'dim_w': 32, //in pixels
     'animation': {
@@ -62,6 +62,15 @@ Crafty.c('SWShip', {
   _maxThrust: 0,
   _iDamper: 0,
   _iDamperActive: false,
+  //fires the side thrusters of the ship.  direction is a boolean 
+  //dictating whether to burn port or starboard
+  _broadSideThruster: function (power, direction) {
+    if(direction){
+      //apply force at 90degree angle from ships heading
+    }else{
+      //apply force at 90degree angle from ships heading
+    }
+  },
   //generates an acceleration then affects the velocity with that accel
   _iDamperEffect: function () { 
     var new_accel = new sw_game.Vector();
@@ -93,7 +102,6 @@ Crafty.c('SWShip', {
   //the input power which is a float between 0 and 1
   _impulseDrive: function (power) {
     if(typeof(power) === 'undefined'){ power = 1; }
-    //LEFT OFF: Write this
     var newForce = new sw_game.Vector();
     var force_mag = power * this._maxThrust;
     var theta = degreesToRadians(this._orientation); //subtract 90 to rotate to ship nose
@@ -101,6 +109,15 @@ Crafty.c('SWShip', {
     newForce.y = force_mag*Math.sin(theta);
     this._force.add(newForce);
     newForce = null; force_mag = null; theta = null;//clear local vars
+  },
+  //Fires the thrusters to turn the ship.  Direction is a boolean 
+  //dictating whether to turn port or starboard
+  _yawThruster: function (power, direction) {
+    if(direction){
+      this._angular_vel = this._maxYaw*power;
+    }else{
+      this._angular_vel = this._maxYaw*power*-1;
+    }
   },
   SWShip: function (ship_type){ // Constructor
     this._maxYaw = ship_type['max_yaw'];
@@ -110,25 +127,27 @@ Crafty.c('SWShip', {
     this._iDamper = ship_type['inertial_damper'];
     this.helmController = function (){ // TODO: IN PROGRESS
       var heading = this._helmControl.heading();
-      if(heading){
+      if(heading && heading != NaN){
+        //compare current direction with desired heading
+
+        //engage broadside thruster
+        //engage main impulse drive
+        //engage yaw thrusters
       }
-  //engage broadside thruster
-  //engage main impulse drive
-  //engage yaw thrusters
     };
     this.bind('enterframe', function () {
       // lets apply a test force to the ship
       if(this.__move.up){
-        this._impulseDrive();
-        //this._force.x = 5;
-        //this._force.y = 5;
+        this._impulseDrive(0.8);
       }
       // apply a test rotation to the ship
       if(this.__move.left){
-        this._angular_vel = -3;
+        //this._angular_vel = -3;
+        this._yawThruster(1, false);
       }
       if(this.__move.right){
-        this._angular_vel = 3;
+        //this._angular_vel = 3;
+        this._yawThruster(1, true);
       }
       // if no input, then disable all engines
       if(!this.__move.left && !this.__move.right){
@@ -143,5 +162,18 @@ Crafty.c('SWShip', {
     return this;
   }
 });
+
+// Class methods =================================================
+/*
+  takes in the player ship and the data of how to attach the anims
+  I predefine how animations are handled. In the case of this game,
+  they're dependent on physical states of the target object.  Meaning, engine
+  burn length dependent on how much thrust being applied. Bank animation
+  depending on angular velocity. 
+  anim_def must align with the sprite that is chosen for this entity.
+  there must also be a physics component attached to this entity.
+*/
+sw_game.Ship.attachAnimationsToShip = function (ship, anim_def){
+};
 
 sw_game.dependencies.included("ship");

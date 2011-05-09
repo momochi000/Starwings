@@ -1,5 +1,5 @@
 Starwings (working title)
-Last-modified: 07 May 2011 03:12:09 PM
+Last-modified: 08 May 2011 11:26:36 PM
 
 Created by
 ==========
@@ -18,6 +18,9 @@ LEFT OFF
 ==========
 next steps: 
  - begin work on helm control
+   built out the impulse and yaw thruster controls, add in broadsideThruster
+   controls then begin work on helm control
+ - add animations to the player ship (and allow animations to be easily attached
 
 TODO
 ==========
@@ -29,6 +32,7 @@ Create a function/system which converts from game units to screen units.
 see if I can use foo.Prototype to add functionality to objects?
 Tweak inertial dampner so it operates proportionally to veloctity.  Actually
 might not want to do this, depends on how the feel of flight is when in use
+Attach animations to the player ship
 
 In this Version
 ==========
@@ -49,7 +53,7 @@ Questions
 ==========
 What is the scale of the game? I'm not talking about the scope but what is the 
 relationship between one pixel on the screen and game dimensions in kilometers
-and so forth? I'm sure most games don't worry about this unless they're complex
+? I'm sure most games don't worry about this unless they're complex
 simulations but in order to get the right feel I do want some simple physics
 to apply to the objects in space.  With that we have to think of formulae.
 With that we must think of units.  With units we must think of scale. Am I
